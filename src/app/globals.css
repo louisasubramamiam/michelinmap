@@ -24,9 +24,9 @@ body {
   filter: brightness(0.85) contrast(1.1) saturate(1.2) hue-rotate(190deg);
 }
 
-/* Transparent map bg so night-sky shows through ocean */
+/* Dark map bg matching page background */
 .maplibregl-map {
-  background: transparent !important;
+  background: var(--background) !important;
 }
 
 /* MapLibre popup */

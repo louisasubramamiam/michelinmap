@@ -1,6 +1,6 @@
 "use client";
 import dynamic from "next/dynamic";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { useRestaurants } from "@/hooks/useRestaurants";
 import Starfield from "@/components/Starfield";
 import Dashboard from "@/components/Dashboard";
@@ -20,6 +20,7 @@ export default function Home() {
   } = useRestaurants();
 
   const [showAddForm, setShowAddForm] = useState(false);
+  const globeRef = useRef<HTMLDivElement>(null);
 
   const handleSelect = useCallback(() => {}, []);
 
@@ -36,7 +37,7 @@ export default function Home() {
 
   return (
     <div className="h-screen flex flex-col overflow-hidden">
-      <Starfield />
+      <Starfield excludeRef={globeRef} />
 
       {/* Header */}
       <div className="relative z-20 px-6 pt-5 pb-4">
@@ -68,7 +69,7 @@ export default function Home() {
       </div>
 
       {/* Globe area */}
-      <div className="flex-1 min-h-0 relative z-10 globe-wrapper">
+      <div ref={globeRef} className="flex-1 min-h-0 relative z-10 globe-wrapper">
         {/* The map */}
         <div className="absolute inset-0">
           <Globe
