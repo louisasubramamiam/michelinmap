@@ -20,21 +20,23 @@ const MAP_STYLE = {
   version: 8 as const,
   name: "Dark",
   sources: {
-    "stadia-dark": {
+    "carto-dark": {
       type: "raster" as const,
       tiles: [
-        "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}@2x.png",
+        "https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png",
+        "https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png",
+        "https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png",
       ],
       tileSize: 256,
-      attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      attribution: '&copy; <a href="https://carto.com/">CARTO</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       maxzoom: 20,
     },
   },
   layers: [
     {
-      id: "stadia-dark-layer",
+      id: "carto-dark-layer",
       type: "raster" as const,
-      source: "stadia-dark",
+      source: "carto-dark",
       minzoom: 0,
       maxzoom: 20,
     },
