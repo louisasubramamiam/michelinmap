@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Category, Restaurant } from "@/types/restaurant";
 
 interface AddRestaurantFormProps {
-  onAdd: (entry: Omit<Restaurant, "id">) => void;
+  onAdd: (entry: Omit<Restaurant, "id">) => Promise<Restaurant> | Restaurant;
   onClose: () => void;
 }
 

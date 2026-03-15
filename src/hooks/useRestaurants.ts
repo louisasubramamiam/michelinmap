@@ -1,49 +1,50 @@
 "use client";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { usePersistentState } from "./usePersistentState";
 import { Category, Restaurant } from "@/types/restaurant";
-import { allSeedRestaurants } from "@/data/seed-restaurants";
 import { computeStats } from "@/lib/stats";
 
 export function useRestaurants() {
-  const [restaurants, setRestaurants] = usePersistentState<Restaurant[]>(
-    "michelin-restaurants",
-    []
-  );
+  const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [activeCategories, setActiveCategories] = useState<Set<Category>>(
     new Set(["together", "louisa", "satvik"])
   );
   const [mounted, setMounted] = useState(false);
 
+  // Fetch restaurants from the API on mount
   useEffect(() => {
-    setMounted(true);
+    fetch("/api/restaurants")
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setRestaurants(data);
+        }
+      })
+      .catch(console.error)
+      .finally(() => setMounted(true));
   }, []);
 
-  // Seed on first load
-  useEffect(() => {
-    if (mounted && restaurants.length === 0) {
-      setRestaurants(allSeedRestaurants);
-    }
-  }, [mounted, restaurants.length, setRestaurants]);
-
   const addRestaurant = useCallback(
-    (entry: Omit<Restaurant, "id">) => {
-      const newRestaurant: Restaurant = {
-        ...entry,
-        id: `custom-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-      };
-      setRestaurants((prev) => [...prev, newRestaurant]);
+    async (entry: Omit<Restaurant, "id">) => {
+      const res = await fetch("/api/restaurants", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(entry),
+      });
+      const newRestaurant = await res.json();
+      if (res.ok) {
+        setRestaurants((prev) => [...prev, newRestaurant]);
+      }
       return newRestaurant;
     },
-    [setRestaurants]
+    []
   );
 
-  const removeRestaurant = useCallback(
-    (id: string) => {
+  const removeRestaurant = useCallback(async (id: string) => {
+    const res = await fetch(`/api/restaurants/${id}`, { method: "DELETE" });
+    if (res.ok) {
       setRestaurants((prev) => prev.filter((r) => r.id !== id));
-    },
-    [setRestaurants]
-  );
+    }
+  }, []);
 
   const toggleCategory = useCallback((category: Category) => {
     setActiveCategories((prev) => {
